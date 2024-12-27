@@ -83,6 +83,8 @@ class Weapon {
       throw Exception('Weapon is broken');
     }
 
+    // SpecialGuageが満タンの時は耐久力が減らない
+    // 自分の攻撃力が弱かったり、敵の防御力が高かったりすると武器の耐久力が減る
     if (!specialGuage.isFull && damageAmount < _DAMAGE_THRESHOLD) {
       final newDurability = durability - 1;
       return Weapon(name, power, newDurability);
