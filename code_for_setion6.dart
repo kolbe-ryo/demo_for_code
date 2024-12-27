@@ -14,26 +14,26 @@ class Damage {
     required final int attackPower,
     required final int weaponPower,
     required final int enemyDefencePower,
-    required final SpecialGuage specialGuage,
+    required final SpecialGauge specialGauge,
   }) {
     final damage = max(
       _MIN_DAMAGE,
       attackPower + weaponPower - enemyDefencePower / 2,
     );
-    // specialGuageが満タンの時はダメージを2倍にする
-    final calculatedDamage = specialGuage.isFull ? damage * 2 : damage;
+    // specialGaugeが満タンの時はダメージを2倍にする
+    final calculatedDamage = specialGauge.isFull ? damage * 2 : damage;
     return Damage._(calculatedDamage.toInt());
   }
 }
 
-class SpecialGuage {
+class SpecialGauge {
   static const int _MIN_GUAGE = 0;
   static const int _MAX_GUAGE = 100;
   static const int _INCREASE_AMOUNT = 5;
 
   final int amount;
 
-  SpecialGuage(this.amount) {
+  SpecialGauge(this.amount) {
     if (amount < _MIN_GUAGE || amount > _MAX_GUAGE) {
       throw Exception(
           'Special guage must be between $_MIN_GUAGE and $_MAX_GUAGE');
@@ -42,10 +42,10 @@ class SpecialGuage {
 
   bool get isFull => amount == _MAX_GUAGE;
 
-  SpecialGuage increase({required final int damageAmount}) {
+  SpecialGauge increase({required final int damageAmount}) {
     final increasedAmount = this.amount + damageAmount / 100 + _INCREASE_AMOUNT;
     final newAmound = min(increasedAmount.toInt(), _MAX_GUAGE);
-    return SpecialGuage(newAmound);
+    return SpecialGauge(newAmound);
   }
 }
 
@@ -77,15 +77,15 @@ class Weapon {
 
   Weapon use({
     required final int damageAmount,
-    required final SpecialGuage specialGuage,
+    required final SpecialGauge specialGauge,
   }) {
     if (!canUse) {
       throw Exception('Weapon is broken');
     }
 
-    // SpecialGuageが満タンの時は耐久力が減らない
+    // SpecialGaugeが満タンの時は耐久力が減らない
     // 自分の攻撃力が弱かったり、敵の防御力が高かったりすると武器の耐久力が減る
-    if (!specialGuage.isFull && damageAmount < _DAMAGE_THRESHOLD) {
+    if (!specialGauge.isFull && damageAmount < _DAMAGE_THRESHOLD) {
       final newDurability = durability - 1;
       return Weapon(name, power, newDurability);
     }
@@ -96,17 +96,19 @@ class Weapon {
 
 void main() {
   final weapon = Weapon('Sword', 100, 100);
-  final specialGuage = SpecialGuage(10);
+  final specialGauge = SpecialGauge(10);
   final damage = Damage.calculate(
     attackPower: 100,
     weaponPower: weapon.power,
     enemyDefencePower: 390,
-    specialGuage: specialGuage,
+    specialGauge: specialGauge,
   );
-
   print('Damage amount: ${damage.amount}');
 
   final newWeapon =
-      weapon.use(damageAmount: damage.amount, specialGuage: specialGuage);
+      weapon.use(damageAmount: damage.amount, specialGauge: specialGauge);
   print('Weapon durability: ${newWeapon.durability}');
+
+  final newSpecialGauge = specialGauge.increase(damageAmount: damage.amount);
+  print('Special guage amount: ${newSpecialGauge.amount}');
 }
