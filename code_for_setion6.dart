@@ -64,7 +64,7 @@ class Weapon {
     this.power,
     this.durability,
   ) {
-    if (power < _MIN_POWER || power > _MAX_POWER) {
+    if (power < _MIN_POWER || _MAX_POWER < power) {
       throw Exception('Power must be between $_MIN_POWER and $_MAX_POWER');
     }
 
