@@ -10,6 +10,9 @@ class Damage {
     }
   }
 
+  // Constructor for no damage
+  Damage.nothing(int amount) : this.amount = amount;
+
   factory Damage.calculate({
     required final int attackPower,
     required final int weaponPower,
