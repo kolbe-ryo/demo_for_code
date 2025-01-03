@@ -52,6 +52,19 @@ class SpecialGauge {
   }
 }
 
+class Something {
+  final String text;
+
+  const Something._(this.text);
+
+  factory Something.validate(String text) {
+    if (text.isEmpty) {
+      throw Exception('${text} is nothing.');
+    }
+    return Something._(text);
+  }
+}
+
 class Weapon {
   static const int _MIN_DURABILITY = 0;
   static const int _MIN_POWER = 0;
